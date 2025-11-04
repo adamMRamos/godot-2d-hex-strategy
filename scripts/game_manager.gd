@@ -59,7 +59,8 @@ class UnitNode extends Node2D:
 	func _input(event):
 		if event is InputEventMouseButton:
 			if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
-				var local_pos = to_local(event.position)
+				var global_mouse = get_global_mouse_position()
+				var local_pos = to_local(global_mouse)
 				var rect = Rect2(-unit_size/2, -unit_size/2, unit_size, unit_size)
 				if rect.has_point(local_pos):
 					print("Unit: ", name, " | Team: ", team, " | Hex Position: ", hex_position)
