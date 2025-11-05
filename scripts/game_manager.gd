@@ -4,6 +4,7 @@ extends Node2D
 @export var tilemap: TileMapLayer
 
 var units: Array = []
+var selected_unit: Unit = null
 
 func _ready():
 	if not tilemap:
@@ -38,3 +39,14 @@ func spawn_unit(hex_pos: Vector2i, team: String, unit_name: String):
 	units.append(unit)
 	
 	print("Spawned ", unit_name, " at hex ", hex_pos)
+
+func on_unit_clicked(unit: Unit):
+	# Deselect previously selected unit
+	if selected_unit != null:
+		selected_unit.set_selected(false)
+	
+	# Select the new unit
+	selected_unit = unit
+	selected_unit.set_selected(true)
+	
+	print("Selected Unit: ", unit.name, " | Team: ", unit.team, " | Hex Position: ", unit.hex_position)
