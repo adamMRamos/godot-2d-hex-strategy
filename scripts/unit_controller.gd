@@ -32,6 +32,7 @@ func _input(event):
 			var local_pos = to_local(global_mouse)
 			var rect = Rect2(-unit_size/2, -unit_size/2, unit_size, unit_size)
 			if rect.has_point(local_pos):
+				get_parent().on_unit_clicked(self)
 				print("Unit: ", name, " | Team: ", team, " | Hex Position: ", hex_position)
 				get_viewport().set_input_as_handled()
 
@@ -40,4 +41,8 @@ func set_hex_position(hex_pos: Vector2i):
 
 func set_team(team_name: String):
 	team = team_name
-	queue_redraw()  # Redraw with new color
+	queue_redraw()
+
+func set_selected(selected: bool):
+	is_selected = selected
+	queue_redraw()
