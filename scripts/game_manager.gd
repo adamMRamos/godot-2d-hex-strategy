@@ -13,6 +13,16 @@ func _ready():
 	
 	spawn_initial_units()
 
+func _unhandled_input(event):
+	# If user clicks anywhere that wasn't handled by a unit, deselect
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
+			# Deselect the current unit
+			if selected_unit != null:
+				selected_unit.deselect()
+				selected_unit = null
+				print("Deselected unit")
+
 func spawn_initial_units():
 	# Spawn RED team units
 	spawn_unit(Vector2i(2, 2), "RED", "Red_Unit_1")
@@ -47,6 +57,6 @@ func on_unit_clicked(unit: Unit):
 	
 	# Select the new unit
 	selected_unit = unit
-	selected_unit.set_selected(true)
+	selected_unit.select()
 	
 	print("Selected Unit: ", unit.name, " | Team: ", unit.team, " | Hex Position: ", unit.hex_position)

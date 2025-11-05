@@ -35,8 +35,6 @@ func _input(event):
 				get_parent().on_unit_clicked(self)
 				print("Unit: ", name, " | Team: ", team, " | Hex Position: ", hex_position)
 				get_viewport().set_input_as_handled()
-			else:
-				deselect()
 
 func set_hex_position(hex_pos: Vector2i):
 	hex_position = hex_pos
@@ -48,6 +46,9 @@ func set_team(team_name: String):
 func set_selected(selected: bool):
 	is_selected = selected
 	queue_redraw()
-	
+
+func select():
+	set_selected(true)
+
 func deselect():
 	set_selected(false)
