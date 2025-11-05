@@ -4,6 +4,7 @@ extends Node2D
 @export var tilemap: TileMapLayer
 
 var units: Array = []
+var selected_unit: Unit = null
 
 func _ready():
 	if not tilemap:
@@ -11,6 +12,16 @@ func _ready():
 		return
 	
 	spawn_initial_units()
+
+func _unhandled_input(event):
+	# If user clicks anywhere that wasn't handled by a unit, deselect
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
+			# Deselect the current unit
+			if selected_unit != null:
+				selected_unit.deselect()
+				selected_unit = null
+				print("Deselected unit")
 
 func spawn_initial_units():
 	# Spawn RED team units
@@ -38,3 +49,14 @@ func spawn_unit(hex_pos: Vector2i, team: String, unit_name: String):
 	units.append(unit)
 	
 	print("Spawned ", unit_name, " at hex ", hex_pos)
+
+func on_unit_clicked(unit: Unit):
+	# Deselect previously selected unit
+	if selected_unit != null:
+		selected_unit.deselect()
+	
+	# Select the new unit
+	selected_unit = unit
+	selected_unit.select()
+	
+	print("Selected Unit: ", unit.name, " | Team: ", unit.team, " | Hex Position: ", unit.hex_position)

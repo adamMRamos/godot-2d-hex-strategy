@@ -5,6 +5,7 @@ extends Node2D
 var team: String = "RED"
 var hex_position: Vector2i
 var unit_size: float = 32.0
+var is_selected: bool = false
 
 func _ready():
 	queue_redraw()
@@ -16,7 +17,12 @@ func _draw():
 	# Draw filled square
 	var rect = Rect2(-unit_size/2, -unit_size/2, unit_size, unit_size)
 	draw_rect(rect, color)
-	draw_rect(rect, border_color, false, 2.0)
+	
+	# Draw border (thicker and yellow if selected)
+	if is_selected:
+		draw_rect(rect, Color.YELLOW, false, 4.0)
+	else:
+		draw_rect(rect, border_color, false, 2.0)
 
 func _input(event):
 	if event is InputEventMouseButton:
@@ -26,6 +32,7 @@ func _input(event):
 			var local_pos = to_local(global_mouse)
 			var rect = Rect2(-unit_size/2, -unit_size/2, unit_size, unit_size)
 			if rect.has_point(local_pos):
+				get_parent().on_unit_clicked(self)
 				print("Unit: ", name, " | Team: ", team, " | Hex Position: ", hex_position)
 				get_viewport().set_input_as_handled()
 
@@ -34,4 +41,14 @@ func set_hex_position(hex_pos: Vector2i):
 
 func set_team(team_name: String):
 	team = team_name
-	queue_redraw()  # Redraw with new color
+	queue_redraw()
+
+func set_selected(selected: bool):
+	is_selected = selected
+	queue_redraw()
+
+func select():
+	set_selected(true)
+
+func deselect():
+	set_selected(false)
