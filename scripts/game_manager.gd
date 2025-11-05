@@ -43,7 +43,7 @@ func spawn_unit(hex_pos: Vector2i, team: String, unit_name: String):
 func on_unit_clicked(unit: Unit):
 	# Deselect previously selected unit
 	if selected_unit != null:
-		selected_unit.set_selected(false)
+		selected_unit.deselect()
 	
 	# Select the new unit
 	selected_unit = unit
