@@ -17,11 +17,17 @@ func _unhandled_input(event):
 	# If user clicks anywhere that wasn't handled by a unit, deselect
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
-			# Deselect the current unit
+			# Get the clicked hex position
+			var global_clicked = get_global_mouse_position()
+			var local_clicked = tilemap.to_local(global_clicked)
+			var hex_pos = tilemap.local_to_map(local_clicked)
+			
+			# If a unit is selected, move it to the clicked hex
 			if selected_unit != null:
-				selected_unit.deselect()
-				selected_unit = null
-				print("Deselected unit")
+				move_unit_to_hex(selected_unit, hex_pos)
+			else:
+				# No unit selected, just deselect (clicking empty space)
+				print("Clicked empty hex: ", hex_pos)
 
 func spawn_initial_units():
 	# Spawn RED team units
