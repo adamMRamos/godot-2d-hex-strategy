@@ -7,6 +7,11 @@ var hex_position: Vector2i
 var unit_size: float = 32.0
 var is_selected: bool = false
 
+# Movement properties
+var max_movement: int = 2  # Maximum movement range per turn
+var current_movement: int = 2  # Remaining movement this turn
+var has_moved: bool = false  # Track if unit has moved this turn
+
 func _ready():
 	queue_redraw()
 
