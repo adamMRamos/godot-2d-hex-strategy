@@ -8,9 +8,8 @@ var unit_size: float = 32.0
 var is_selected: bool = false
 
 # Movement properties
-var max_movement: int = 2  # Maximum movement range per turn
+var max_movement: int = 2
 var current_movement: int = 2  # Remaining movement this turn
-var has_moved: bool = false  # Track if unit has moved this turn
 
 func _ready():
 	queue_redraw()
@@ -57,3 +56,22 @@ func select():
 
 func deselect():
 	set_selected(false)
+
+func can_move() -> bool:
+	"""Check if unit has movement remaining"""
+	return current_movement > 0
+
+func use_movement():
+	"""Consume all movement for this turn"""
+	current_movement = 0
+	print(name, " used movement. Remaining: ", current_movement)
+
+func reset_movement():
+	"""Reset movement at the start of a new turn"""
+	current_movement = max_movement
+	print(name, " movement reset to ", current_movement)
+
+func set_max_movement(new_max: int):
+	"""Set the maximum movement range for this unit"""
+	max_movement = new_max
+	current_movement = max_movement
