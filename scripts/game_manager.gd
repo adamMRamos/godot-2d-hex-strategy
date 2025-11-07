@@ -18,9 +18,7 @@ func _unhandled_input(event):
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
 			# Get the clicked hex position
-			var global_clicked = get_global_mouse_position()
-			var local_clicked = tilemap.to_local(global_clicked)
-			var hex_pos = tilemap.local_to_map(local_clicked)
+			var hex_pos = tilemap.mouse_to_hex()
 			
 			# If a unit is selected, move it to the clicked hex
 			if selected_unit != null:
