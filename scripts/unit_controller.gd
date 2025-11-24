@@ -61,6 +61,10 @@ func can_move() -> bool:
 	"""Check if unit has movement remaining"""
 	return current_movement > 0
 
+func can_move_to(distance: int) -> bool:
+	"""Check if unit has enough movement to travel to a destination"""
+	return current_movement >= distance
+
 func use_movement():
 	"""Consume all movement for this turn"""
 	current_movement = 0

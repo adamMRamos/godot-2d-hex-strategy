@@ -66,15 +66,23 @@ func on_unit_clicked(unit: Unit):
 	print("Selected Unit: ", unit.name, " | Team: ", unit.team, " | Hex Position: ", unit.hex_position)
 
 func move_unit_to_hex(unit: Unit, hex_pos: Vector2i):
-	# Update unit's hex position
-	unit.set_hex_position(hex_pos)
+	# find hex distance
+	var origin = unit.hex_position
+	var distance = HexUtils.hex_distance(origin, hex_pos)
 	
-	# Convert hex position to world position
-	var world_pos = tilemap.map_to_local(hex_pos)
-	unit.position = world_pos
+	# try to move unit
+	if unit.can_move_to(distance):
+		# Update unit's hex position
+		unit.set_hex_position(hex_pos)
 	
-	# Deselect the unit after moving
+		# Convert hex position to world position
+		var world_pos = tilemap.map_to_local(hex_pos)
+		unit.position = world_pos
+		
+		print("Moved ", unit.name, " from ", origin, " to ", hex_pos, " | cost ", distance)
+	else:
+		print("Can't move ", unit.name, " from ", origin, " to ", hex_pos, " | cost ", distance)
+	
+	# Deselect the unit after trying to move
 	unit.deselect()
 	selected_unit = null
-	
-	print("Moved ", unit.name, " to hex ", hex_pos)
