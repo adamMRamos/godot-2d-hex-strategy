@@ -37,7 +37,7 @@ func _input(event):
 			var rect = Rect2(-unit_size/2, -unit_size/2, unit_size, unit_size)
 			if rect.has_point(local_pos):
 				get_parent().on_unit_clicked(self)
-				print("Unit: ", name, " | Team: ", team, " | Hex Position: ", hex_position)
+				print("Unit: ", name, " | Team: ", team, " | Hex Position: ", hex_position, " | Movement: ", current_movement, "/", max_movement)
 				get_viewport().set_input_as_handled()
 
 func set_hex_position(hex_pos: Vector2i):
@@ -60,6 +60,10 @@ func deselect():
 func can_move() -> bool:
 	"""Check if unit has movement remaining"""
 	return current_movement > 0
+
+func can_move_to(distance: int) -> bool:
+	"""Check if unit has enough movement to travel to a destination"""
+	return current_movement >= distance
 
 func use_movement():
 	"""Consume all movement for this turn"""
