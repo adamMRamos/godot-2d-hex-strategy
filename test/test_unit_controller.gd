@@ -33,3 +33,15 @@ func test_set_selected():
 	
 	unit.set_selected(false)
 	assert_bool(unit.is_selected).is_false()
+
+## Test: select() sets is_selected to true
+func test_select():
+	unit.is_selected = false
+	unit.select()
+	assert_bool(unit.is_selected).is_true()
+
+## Test: deselect() sets is_selected to false
+func test_deselect():
+	unit.is_selected = true
+	unit.deselect()
+	assert_bool(unit.is_selected).is_false()
