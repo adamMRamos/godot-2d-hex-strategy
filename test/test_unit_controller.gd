@@ -25,3 +25,11 @@ func test_set_team():
 	
 	unit.set_team("BLUE")
 	assert_str(unit.team).is_equal("BLUE")
+
+## Test: set_selected updates the is_selected flag
+func test_set_selected():
+	unit.set_selected(true)
+	assert_bool(unit.is_selected).is_true()
+	
+	unit.set_selected(false)
+	assert_bool(unit.is_selected).is_false()
