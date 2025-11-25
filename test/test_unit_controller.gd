@@ -45,3 +45,19 @@ func test_deselect():
 	unit.is_selected = true
 	unit.deselect()
 	assert_bool(unit.is_selected).is_false()
+
+## Test: can_move returns true when unit has movement
+func test_can_move_with_movement():
+	unit.current_movement = 2
+	assert_bool(unit.can_move()).is_true()
+
+## Test: can_move returns false when current_movement is 0
+func test_can_move_no_movement():
+	unit.current_movement = 0
+	assert_bool(unit.can_move()).is_false()
+
+## Test: can_move returns false when current_movement is 0
+func test_can_move_negative_movement():
+	unit.current_movement = -1
+	assert_bool(unit.can_move()).is_false()
+	
