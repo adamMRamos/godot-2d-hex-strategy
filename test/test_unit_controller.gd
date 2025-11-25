@@ -105,3 +105,47 @@ func test_set_max_movement_various_values():
 	unit.set_max_movement(10)
 	assert_int(unit.max_movement).is_equal(10)
 	assert_int(unit.current_movement).is_equal(10)
+
+## Test: Full movement cycle (move then reset)
+func test_full_movement_cycle():
+	# Start with fresh unit
+	unit.max_movement = 2
+	unit.current_movement = 2
+	
+	# Should be able to move
+	assert_bool(unit.can_move()).is_true()
+	
+	# Use movement
+	unit.use_movement()
+	assert_bool(unit.can_move()).is_false()
+	assert_int(unit.current_movement).is_equal(0)
+	
+	# Reset for next turn
+	unit.reset_movement()
+	assert_bool(unit.can_move()).is_true()
+	assert_int(unit.current_movement).is_equal(2)
+
+## Test: Multiple units have independent movement
+func test_multiple_units_independent():
+	var unit2 = auto_free(Unit.new())
+	
+	unit.set_max_movement(2)
+	unit2.set_max_movement(3)
+	
+	unit.use_movement()
+	
+	# unit should have no movement
+	assert_bool(unit.can_move()).is_false()
+	assert_int(unit.current_movement).is_equal(0)
+	
+	# unit2 should still have full movement
+	assert_bool(unit2.can_move()).is_true()
+	assert_int(unit2.current_movement).is_equal(3)
+
+## Test: Unit properties initialize correctly
+func test_initial_properties():
+	var new_unit = auto_free(Unit.new())
+	assert_int(new_unit.max_movement).is_equal(2)
+	assert_int(new_unit.current_movement).is_equal(2)
+	assert_str(new_unit.team).is_equal("RED")
+	assert_bool(new_unit.is_selected).is_false()
