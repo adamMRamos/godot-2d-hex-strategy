@@ -13,7 +13,7 @@ func _ready():
 	
 	spawn_initial_units()
 
-func _unhandled_input(event):
+func _input(event):
 	# If user clicks anywhere that wasn't handled by a unit, deselect
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
@@ -22,6 +22,7 @@ func _unhandled_input(event):
 			
 			# If a unit is selected, move it to the clicked hex
 			if selected_unit != null:
+				get_viewport().set_input_as_handled()
 				move_unit_to_hex(selected_unit, hex_pos)
 			else:
 				# No unit selected, just deselect (clicking empty space)
