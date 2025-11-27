@@ -3,7 +3,7 @@ extends Node2D
 
 @export var tilemap: TileMapLayer
 
-var units: Array = []
+var units: Array[Unit] = []
 var selected_unit: Unit = null
 
 func _ready():
