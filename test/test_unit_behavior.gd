@@ -55,3 +55,36 @@ func test_click_unit_selects():
 	# Unit should be selected
 	assert_bool(unit.is_selected).is_true()
 	assert_object(game_manager.selected_unit).is_equal(unit)
+
+
+## Test: click same unit twice mvoes unit to same hex and deselects
+func test_double_click_same_unit():
+	pass
+
+## Test: Clicking empty space has no effect
+func test_click_empty_space_ignored():
+	pass
+
+## Test: Right click does nothing (only left click is handled)
+func test_right_click_ignored():
+	pass
+
+## Test: Unit can move to adjacent hex
+func test_unit_moves_to_adjacent_hex():
+	pass
+
+## Test: Clicking different unit changes selection
+func test_click_different_unit_moves_to_unit():
+	pass
+
+## Test: Unit can moves 2 hexes away
+func test_unit_moves_two_hexes_away():
+	pass
+
+## Test: Unit cannnot move beyond max movement range
+func test_unit_moves_too_far_ignored():
+	pass
+
+## Test: Unit can move multiple times within max range
+func test_unit_moves_more_than_once():
+	pass
