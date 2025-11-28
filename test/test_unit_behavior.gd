@@ -86,13 +86,20 @@ func test_click_empty_space_ignored():
 	# verify game manager selected is null
 	assert_object(game_manager.selected_unit).is_null()
 
-## Test: Right click does nothing (only left click is handled)
-func test_right_click_ignored():
-	pass
-
 ## Test: Unit can move to adjacent hex
 func test_unit_moves_to_adjacent_hex():
-	pass
+	# get first unit
+	var unit = units[0]
+	# select unit
+	await click_at_world_pos(unit.global_position)
+	# click on neighboring hex
+	var neighbor_hex = Vector2i(unit.hex_position.x, unit.hex_position.y + 1)
+	var neighbor_pos = tilemap.map_to_local(neighbor_hex)
+	await click_at_world_pos(neighbor_pos)
+	# verify unit has moved to neighbor no longer selected
+	assert_vector(unit.global_position).is_equal(neighbor_pos)
+	assert_bool(unit.is_selected).is_false()
+	assert_object(game_manager.selected_unit).is_null()
 
 ## Test: Clicking different unit changes selection
 func test_click_different_unit_moves_to_unit():
