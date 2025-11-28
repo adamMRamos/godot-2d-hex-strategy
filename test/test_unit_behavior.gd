@@ -54,19 +54,19 @@ func test_click_unit_selects():
 
 ## Test: click same unit twice mvoes unit to same hex and deselects
 func test_double_click_same_unit():
-	# get 2 units
-	var A = units[0]
-	var B = units[1]
-	# click A
-	await click_at_world_pos(A.global_position)
-	# verify A is selected
-	assert_bool(A.is_selected).is_true()
-	assert_object(game_manager.selected_unit).is_equal(A)
-	# then click B
-	await click_at_world_pos(B.global_position)
-	# verify A.hex == B.hex and no unit is selected 
-	assert_vector(A.global_position).is_equal(B.global_position)
-	assert_bool(A.is_selected).is_false()
+	# get a units
+	var unit = units[0]
+	var current_position = unit.global_position
+	# select the unit
+	await click_at_world_pos(unit.global_position)
+	# verify unit is selected
+	assert_bool(unit.is_selected).is_true()
+	assert_object(game_manager.selected_unit).is_equal(unit)
+	# then click the same unit
+	await click_at_world_pos(unit.global_position)
+	# verify the unit has not moved and no unit is selected 
+	assert_vector(unit.global_position).is_equal(current_position)
+	assert_bool(unit.is_selected).is_false()
 	assert_object(game_manager.selected_unit).is_null()
 
 ## Test: Clicking empty space has no effect
@@ -101,9 +101,22 @@ func test_unit_moves_to_adjacent_hex():
 	assert_bool(unit.is_selected).is_false()
 	assert_object(game_manager.selected_unit).is_null()
 
-## Test: Clicking different unit changes selection
+## Test: clicking different unit moves to unit
 func test_click_different_unit_moves_to_unit():
-	pass
+	# get 2 units
+	var A = units[0]
+	var B = units[1]
+	# click A
+	await click_at_world_pos(A.global_position)
+	# verify A is selected
+	assert_bool(A.is_selected).is_true()
+	assert_object(game_manager.selected_unit).is_equal(A)
+	# then click B
+	await click_at_world_pos(B.global_position)
+	# verify A.hex == B.hex and no unit is selected 
+	assert_vector(A.global_position).is_equal(B.global_position)
+	assert_bool(A.is_selected).is_false()
+	assert_object(game_manager.selected_unit).is_null()
 
 ## Test: Unit can moves 2 hexes away
 func test_unit_moves_two_hexes_away():
