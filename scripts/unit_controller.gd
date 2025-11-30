@@ -28,7 +28,7 @@ func _draw():
 	else:
 		draw_rect(rect, border_color, false, 2.0)
 
-func _input(event):
+func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
 			# Get the global mouse position and convert to local coordinates
@@ -36,9 +36,9 @@ func _input(event):
 			var local_pos = to_local(global_mouse)
 			var rect = Rect2(-unit_size/2, -unit_size/2, unit_size, unit_size)
 			if rect.has_point(local_pos):
+				get_viewport().set_input_as_handled()
 				get_parent().on_unit_clicked(self)
 				print("Unit: ", name, " | Team: ", team, " | Hex Position: ", hex_position, " | Movement: ", current_movement, "/", max_movement)
-				get_viewport().set_input_as_handled()
 
 func set_hex_position(hex_pos: Vector2i):
 	hex_position = hex_pos
