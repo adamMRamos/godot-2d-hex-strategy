@@ -120,12 +120,53 @@ func test_click_different_unit_moves_to_unit():
 
 ## Test: Unit can moves 2 hexes away
 func test_unit_moves_two_hexes_away():
-	pass
+	# select a unit
+	var unit = units[0]
+	await click_at_world_pos(unit.global_position)
+	# move to two hexes away
+	var destination_hex = Vector2i(unit.hex_position.x + unit.max_movement, unit.hex_position.y)
+	var destination_local = tilemap.map_to_local(destination_hex)
+	await click_at_world_pos(destination_local)
+	# verify unit has moved 2 hexes away
+	assert_vector(unit.global_position).is_equal(destination_local)
+	assert_bool(unit.is_selected).is_false()
+	assert_object(game_manager.selected_unit).is_null()
 
 ## Test: Unit cannnot move beyond max movement range
 func test_unit_moves_too_far_ignored():
-	pass
+	# select a unit
+	var unit = units[0]
+	await click_at_world_pos(unit.global_position)
+	# move to ten hexes away
+	var destination_hex = Vector2i(unit.hex_position.x + 10, unit.hex_position.y)
+	var destination_local = tilemap.map_to_local(destination_hex)
+	await click_at_world_pos(destination_local)
+	# verify unit has NOT moved
+	assert_vector(unit.global_position).is_equal(unit.global_position)
+	assert_bool(unit.is_selected).is_false()
+	assert_object(game_manager.selected_unit).is_null()
 
 ## Test: Unit can move multiple times within max range
 func test_unit_moves_more_than_once():
-	pass
+	# select a unit
+	var unit = units[0]
+	# move max hexes away 3 times
+	# move 1
+	var destination_hex = Vector2i(unit.hex_position.x + unit.max_movement, unit.hex_position.y)
+	var destination_local = tilemap.map_to_local(destination_hex)
+	await click_at_world_pos(unit.global_position)
+	await click_at_world_pos(destination_local)
+	# move 2
+	destination_hex = Vector2i(unit.hex_position.x + unit.max_movement, unit.hex_position.y)
+	destination_local = tilemap.map_to_local(destination_hex)
+	await click_at_world_pos(unit.global_position)
+	await click_at_world_pos(destination_local)
+	# move 3
+	destination_hex = Vector2i(unit.hex_position.x + unit.max_movement, unit.hex_position.y)
+	destination_local = tilemap.map_to_local(destination_hex)
+	await click_at_world_pos(unit.global_position)
+	await click_at_world_pos(destination_local)
+	# verify unit has moved
+	assert_vector(unit.global_position).is_equal(unit.global_position)
+	assert_bool(unit.is_selected).is_false()
+	assert_object(game_manager.selected_unit).is_null()
