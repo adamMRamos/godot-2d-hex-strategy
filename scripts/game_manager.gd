@@ -72,7 +72,7 @@ func move_unit_to_hex(unit: Unit, hex_pos: Vector2i):
 	var distance = HexUtils.hex_distance(origin, hex_pos)
 	
 	# try to move unit
-	if unit.can_move_to(distance):
+	if unit.can_move_to(distance) and hex_is_vacant(hex_pos):
 		# Update unit's hex position
 		unit.set_hex_position(hex_pos)
 	
@@ -87,3 +87,10 @@ func move_unit_to_hex(unit: Unit, hex_pos: Vector2i):
 	# Deselect the unit after trying to move
 	unit.deselect()
 	selected_unit = null
+
+func hex_is_vacant(hex_pos: Vector2i) -> bool:
+	for unit in units:
+		if unit.hex_position == hex_pos:
+			return false
+	
+	return true

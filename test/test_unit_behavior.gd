@@ -3,6 +3,7 @@ extends GdUnitTestSuite
 var runner: GdUnitSceneRunner
 var game_manager: Node2D
 var tilemap: TileMapLayer
+var camera: Camera2D
 var units: Array[Unit]
 
 func before_test():
@@ -10,6 +11,7 @@ func before_test():
 	runner = scene_runner("res://scenes/game_manager.tscn")
 	game_manager = runner.scene()
 	tilemap = game_manager.get_node("TileMapLayer")
+	camera = game_manager.get_node("Camera2D")
 	units = game_manager.units
 
 func after_test():
@@ -102,10 +104,11 @@ func test_unit_moves_to_adjacent_hex():
 	assert_object(game_manager.selected_unit).is_null()
 
 ## Test: clicking different unit moves to unit
-func test_click_different_unit_moves_to_unit():
+func test_unit_cannot_move_onto_occupied_hex():
 	# get 2 units
 	var A = units[0]
 	var B = units[1]
+	var origin = A.global_position
 	# click A
 	await click_at_world_pos(A.global_position)
 	# verify A is selected
@@ -114,7 +117,7 @@ func test_click_different_unit_moves_to_unit():
 	# then click B
 	await click_at_world_pos(B.global_position)
 	# verify A.hex == B.hex and no unit is selected 
-	assert_vector(A.global_position).is_equal(B.global_position)
+	assert_vector(A.global_position).is_equal(origin)
 	assert_bool(A.is_selected).is_false()
 	assert_object(game_manager.selected_unit).is_null()
 
@@ -154,19 +157,25 @@ func test_unit_moves_more_than_once():
 	# move 1
 	var destination_hex = Vector2i(unit.hex_position.x + unit.max_movement, unit.hex_position.y)
 	var destination_local = tilemap.map_to_local(destination_hex)
-	await click_at_world_pos(unit.global_position)
+	await click_at_world_pos(unit.position)
 	await click_at_world_pos(destination_local)
+	camera.position = destination_local
+	await await_millis(500)
 	# move 2
 	destination_hex = Vector2i(unit.hex_position.x + unit.max_movement, unit.hex_position.y)
 	destination_local = tilemap.map_to_local(destination_hex)
-	await click_at_world_pos(unit.global_position)
+	await click_at_world_pos(unit.position)
 	await click_at_world_pos(destination_local)
+	camera.position = destination_local
+	await await_millis(500)
 	# move 3
 	destination_hex = Vector2i(unit.hex_position.x + unit.max_movement, unit.hex_position.y)
 	destination_local = tilemap.map_to_local(destination_hex)
-	await click_at_world_pos(unit.global_position)
+	await click_at_world_pos(unit.position)
 	await click_at_world_pos(destination_local)
-	# verify unit has moved
-	assert_vector(unit.global_position).is_equal(unit.global_position)
+	camera.position = destination_local
+	await await_millis(500)
+	# verify unit has moved to the final location
+	assert_vector(unit.position).is_equal(destination_local)
 	assert_bool(unit.is_selected).is_false()
 	assert_object(game_manager.selected_unit).is_null()
