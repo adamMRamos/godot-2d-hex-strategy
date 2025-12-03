@@ -2,6 +2,7 @@
 extends Node2D
 
 @export var tilemap: TileMapLayer
+var turn_manager: TurnManager
 
 var units: Array[Unit] = []
 var selected_unit: Unit = null
@@ -10,6 +11,9 @@ func _ready():
 	if not tilemap:
 		push_error("TileMapLayer not assigned to GameManager!")
 		return
+	
+	turn_manager = TurnManager.new()
+	add_child(turn_manager)
 	
 	spawn_initial_units()
 
