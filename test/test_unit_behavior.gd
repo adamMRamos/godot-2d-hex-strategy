@@ -215,7 +215,8 @@ func test_turn_change_only_select_team_units():
 	assert_object(game_manager.selected_unit).is_null()
 	# can select BLUE unit
 	var blue_unit = units[2]
+	camera.position = blue_unit.position
+	await await_millis(500)
 	await click_at_world_pos(blue_unit.position)
 	assert_str(blue_unit.team).is_equal("BLUE")
 	assert_object(game_manager.selected_unit).is_equal(blue_unit)
-	

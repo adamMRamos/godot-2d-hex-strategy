@@ -67,6 +67,11 @@ func spawn_unit(hex_pos: Vector2i, team: String, unit_name: String):
 	print("Spawned ", unit_name, " at hex ", hex_pos)
 
 func on_unit_clicked(unit: Unit):
+	# Only allow selection if unit belongs to current team
+	if unit.team != turn_manager.current_team:
+		print("Not ", unit.team, "'s turn! It's ", turn_manager.current_team, "'s turn.")
+		return
+	
 	# Deselect previously selected unit
 	if selected_unit != null:
 		selected_unit.deselect()
