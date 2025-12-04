@@ -2,6 +2,7 @@
 extends Node2D
 
 @export var tilemap: TileMapLayer
+var turn_manager: TurnManager
 
 var units: Array[Unit] = []
 var selected_unit: Unit = null
@@ -11,7 +12,17 @@ func _ready():
 		push_error("TileMapLayer not assigned to GameManager!")
 		return
 	
+	turn_manager = TurnManager.new()
+	add_child(turn_manager)
+	turn_manager.turn_changed.connect(_on_turn_changed)
+	
 	spawn_initial_units()
+
+func _on_turn_changed(new_team: String):
+	# Deselect any selected unit when turn changes
+	if selected_unit != null:
+		selected_unit.deselect()
+		selected_unit = null
 
 func _input(event):
 	# If user clicks anywhere that wasn't handled by a unit, deselect
@@ -56,6 +67,11 @@ func spawn_unit(hex_pos: Vector2i, team: String, unit_name: String):
 	print("Spawned ", unit_name, " at hex ", hex_pos)
 
 func on_unit_clicked(unit: Unit):
+	# Only allow selection if unit belongs to current team
+	if unit.team != turn_manager.current_team:
+		print("Not ", unit.team, "'s turn! It's ", turn_manager.current_team, "'s turn.")
+		return
+	
 	# Deselect previously selected unit
 	if selected_unit != null:
 		selected_unit.deselect()

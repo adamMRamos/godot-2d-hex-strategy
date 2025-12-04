@@ -5,6 +5,7 @@ var game_manager: Node2D
 var tilemap: TileMapLayer
 var camera: Camera2D
 var units: Array[Unit]
+var turn_manager: TurnManager
 
 func before_test():
 	# Load and run the actual game scene
@@ -13,6 +14,7 @@ func before_test():
 	tilemap = game_manager.get_node("TileMapLayer")
 	camera = game_manager.get_node("Camera2D")
 	units = game_manager.units
+	turn_manager = game_manager.turn_manager
 
 func after_test():
 	runner = null
@@ -179,3 +181,42 @@ func test_unit_moves_more_than_once():
 	assert_vector(unit.position).is_equal(destination_local)
 	assert_bool(unit.is_selected).is_false()
 	assert_object(game_manager.selected_unit).is_null()
+
+func test_turn_change_to_blue_turn():
+	# verify starting team is RED
+	assert_str(turn_manager.current_team).is_equal("RED")
+	# press ENTER
+	runner.simulate_key_press(KEY_ENTER)
+	# verify team changed to BLUE
+	assert_str(turn_manager.current_team).is_equal("BLUE")
+
+func test_turn_change_deselect_unit():
+	# select unit
+	var unit = units[0]
+	await click_at_world_pos(unit.position)
+	assert_bool(unit.is_selected).is_true()
+	assert_object(game_manager.selected_unit).is_equal(unit)
+	# press ENTER
+	runner.simulate_key_press(KEY_ENTER)
+	# verify unit is deselected
+	assert_bool(unit.is_selected).is_false()
+	assert_object(game_manager.selected_unit).is_null()
+
+func test_turn_change_only_select_team_units():
+	# select RED unit
+	var red_unit = units[0]
+	await click_at_world_pos(red_unit.position)
+	assert_str(red_unit.team).is_equal("RED")
+	assert_object(game_manager.selected_unit).is_equal(red_unit)
+	# press ENTER
+	runner.simulate_key_press(KEY_ENTER)
+	# cannot select RED unit
+	await click_at_world_pos(red_unit.position)
+	assert_object(game_manager.selected_unit).is_null()
+	# can select BLUE unit
+	var blue_unit = units[2]
+	camera.position = blue_unit.position
+	await await_millis(500)
+	await click_at_world_pos(blue_unit.position)
+	assert_str(blue_unit.team).is_equal("BLUE")
+	assert_object(game_manager.selected_unit).is_equal(blue_unit)
