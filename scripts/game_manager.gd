@@ -14,8 +14,15 @@ func _ready():
 	
 	turn_manager = TurnManager.new()
 	add_child(turn_manager)
+	turn_manager.turn_changed.connect(_on_turn_changed)
 	
 	spawn_initial_units()
+
+func _on_turn_changed(new_team: String):
+	# Deselect any selected unit when turn changes
+	if selected_unit != null:
+		selected_unit.deselect()
+		selected_unit = null
 
 func _input(event):
 	# If user clicks anywhere that wasn't handled by a unit, deselect
